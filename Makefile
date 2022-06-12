@@ -1,0 +1,2 @@
+server : main.cpp Buffer/buffer.cpp HTTP/HTTPConn.cpp HTTP/HTTPRequest.cpp HTTP/HTTPResponse.cpp Log/log.cpp Server/epoller.cpp Server/webserver.cpp SQLConnPool/sqlconnpool.cpp Timer/heaptimer.cpp
+	$(CXX) $^ -o $@ -pthread -lmysqlclient -std=c++20 -g
