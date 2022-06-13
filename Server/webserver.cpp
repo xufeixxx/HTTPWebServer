@@ -19,8 +19,6 @@ threadpool_(new ThreadPool<void()>()),epoller_(new Epoller()){
         LOG_INFO("Listen Mode: ET, OpenConn Mode: ET\n");
         LOG_INFO("SqlConnPool num: 16, ThreadPool num: 8\n");
     }
-
-
 }
 
 bool WebServer::InitSocket_(){
@@ -71,7 +69,6 @@ bool WebServer::InitSocket_(){
     return true;
 
 }
-
 
 int WebServer::SetFdNonblock(int fd){
     assert(fd > 0);
@@ -145,7 +142,6 @@ void WebServer::ExtentTime_(HTTPConn* client){
 
 void WebServer::OnRead_(HTTPConn* client){
     assert(client);
-    //cout << "当前线程为:" << pthread_self() <<"\n";
     int ret = -1;
     int readErrno = 0;
     ret = client->read(&readErrno);
@@ -162,7 +158,6 @@ void WebServer::OnWrite_(HTTPConn* client){
     int writeErrno = 0;
     ret = client->write(&writeErrno);
     if(client->ToWriteBytes() == 0) {
-        /* 传输完成 */
         if(client->IsKeepAlive()) {
             OnProcess(client);
             return;
@@ -170,7 +165,6 @@ void WebServer::OnWrite_(HTTPConn* client){
     }
     else if(ret < 0) {
         if(writeErrno == EAGAIN) {
-            /* 继续传输 */
             epoller_->ModFd(client->getFD(), connEvent_ | EPOLLOUT);
             return;
         }
@@ -190,10 +184,10 @@ void WebServer::Start(){
     if(!isClose_) { LOG_INFO("========== Server start ==========\n"); }
     time_t cur = time(nullptr);
     while(!isClose_) {
-        if(time(nullptr) - cur >= 10){
-            timer_->tick();
-            cur = time(nullptr);
-        }
+        // if(time(nullptr) - cur >= 10){
+        //     timer_->tick();
+        //     cur = time(nullptr);
+        // }
         int eventCnt = epoller_->Wait();
         for(int i = 0; i < eventCnt; i++) {
             int fd = epoller_->GetEventFd(i);
@@ -218,4 +212,3 @@ void WebServer::Start(){
         }
     }
 }
-

@@ -14,7 +14,7 @@ template<typename func_type>
 class ThreadPool{
 public:
 
-    ThreadPool(int threadCount = 8):sem_count_(0),isClosed(false){
+    ThreadPool(int threadCount = 20):sem_count_(0),isClosed(false){
         assert(threadCount > 0);
         for(int i = 0; i < threadCount; i++){
             pthread_t tid;
